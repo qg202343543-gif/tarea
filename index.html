@@ -1,6 +1,7 @@
 <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AR con cambio de modelos</title>
     <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
   </head>
@@ -8,35 +9,42 @@
     <a-scene mindar-image="imageTargetSrc: ./targets.mind;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
       
       <a-assets>
+        <!-- Imagen del marcador -->
         <img id="card" src="./cabeza-tigre-geometrica_62860-86.jpg" />
-        <a-asset-item id="model1" src="./Tiger.glb"></a-asset-item>
-        <a-asset-item id="model2" src="./Tiger2.glb"></a-asset-item>
-        <a-asset-item id="model3" src="./Tiger3.glb"></a-asset-item>
+        <!-- Modelos 3D -->
+        <a-asset-item id="model1" src="./modelo1.glb"></a-asset-item>
+        <a-asset-item id="model2" src="./modelo2.glb"></a-asset-item>
+        <a-asset-item id="model3" src="./modelo3.glb"></a-asset-item>
       </a-assets>
 
-      <!-- Cámara con cursor para detectar clicks/taps -->
       <a-camera position="0 0 0" look-controls="enabled: false">
         <a-cursor fuse="false" rayOrigin="mouse"></a-cursor>
       </a-camera>
 
       <a-entity mindar-image-target="targetIndex: 0">
+        <!-- Imagen de referencia sobre el marcador -->
         <a-plane src="#card" position="0 0 0" height="0.552" width="1" rotation="0 0 0"></a-plane>
 
-        <!-- Modelo 3D -->
+        <!-- Modelo 3D inicial -->
         <a-gltf-model id="avatarModel" src="#model1" position="0 0 1" scale="0.005 0.005 0.005" rotation="0.5 0.5 0.5"
                       animation="property: position; to: 0 0.1 0.1; dur: 1000; easing: easeInOutQuad; loop: true; dir: alternate">
         </a-gltf-model>
+
+        <!-- Plano invisible para recibir clicks -->
+        <a-plane id="clickPlane" position="0 0 1" width="0.5" height="0.5" material="opacity: 0; transparent: true"></a-plane>
       </a-entity>
     </a-scene>
 
     <script>
+      // Lista de modelos a mostrar
       const modelos = ["#model1", "#model2", "#model3"];
       let indice = 0;
 
       const avatar = document.getElementById("avatarModel");
+      const clickPlane = document.getElementById("clickPlane");
 
-      // Escucha clicks/taps sobre el modelo usando A-Frame cursor
-      avatar.addEventListener("click", () => {
+      // Cambiar modelo al tocar el plano invisible
+      clickPlane.addEventListener("click", () => {
         indice = (indice + 1) % modelos.length;
         avatar.setAttribute("gltf-model", modelos[indice]);
       });
