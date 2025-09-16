@@ -10,44 +10,36 @@
              color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights"
              vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
 
-      <a-assets>
-        <img id="card" src="./cabeza-tigre-geometrica_62860-86.jpg" />
-        <a-asset-item id="Tiger" src="./Tiger.glb"></a-asset-item>
-        <a-asset-item id="modelo1" src="./modelo1.glb"></a-asset-item>
-        <a-asset-item id="modelo2" src="./modelo2.glb"></a-asset-item>
-        <a-asset-item id="modelo3" src="./modelo3.glb"></a-asset-item>
-      </a-assets>
-
       <!-- Cámara con cursor compatible móvil y escritorio -->
       <a-camera position="0 0 0" look-controls="enabled: false">
-        <a-cursor id="cursor" fuse="false" rayOrigin="cursor"></a-cursor>
+        <a-cursor fuse="false" rayOrigin="cursor"></a-cursor>
       </a-camera>
 
       <!-- Marcador y modelo inicial -->
-      <a-entity mindar-image-target="targetIndex: 0">
-        <a-plane src="#card" position="0 0 0" height="0.552" width="1" rotation="0 0 0"></a-plane>
+      <a-entity mindar-image-target="targetIndex: 0" id="marker">
+        <a-plane src="./cabeza-tigre-geometrica_62860-86.jpg" position="0 0 0" height="0.552" width="1"></a-plane>
 
         <!-- Modelo 3D inicial -->
-        <a-gltf-model id="avatarModel" src="#Tiger"
+        <a-gltf-model id="avatarModel" src="./Tiger.glb"
                       position="0 0 1" scale="0.005 0.005 0.005" rotation="0.5 0.5 0.5"
-                      animation="property: position; to: 0 0.1 0.1; dur: 1000; easing: easeInOutQuad; loop: true; dir: alternate"
                       class="clickable">
         </a-gltf-model>
       </a-entity>
     </a-scene>
 
     <script>
-      // Lista de modelos con sus IDs de assets
-      const modelos = ["#Tiger", "#modelo1", "#modelo2", "#modelo3"];
+      // Lista de rutas a los modelos
+      const modelos = ["./Tiger.glb", "./modelo1.glb", "./modelo2.glb", "./modelo3.glb"];
       let indice = 0;
 
       const avatar = document.getElementById("avatarModel");
       const cursor = document.getElementById("cursor");
 
-      // Cambiar modelo cuando se hace click/tap sobre el modelo
+      // Cambiar modelo al tocar el modelo
       cursor.addEventListener("click", (evt) => {
         const intersectedEl = evt.detail.intersectedEl;
         if (intersectedEl && intersectedEl.id === "avatarModel") {
+          // Cambia al siguiente modelo
           indice = (indice + 1) % modelos.length;
           avatar.setAttribute("gltf-model", modelos[indice]);
         }
