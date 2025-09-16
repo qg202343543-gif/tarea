@@ -1,49 +1,22 @@
+
 <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>AR Cambio de Modelos</title>
     <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
   </head>
   <body>
-    <a-scene mindar-image="imageTargetSrc: ./targets.mind;" embedded
-             color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights"
-             vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+    <a-scene mindar-image="imageTargetSrc: ./targets.mind;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+      <a-assets>
+        <img id="card" src="./cabeza-tigre-geometrica_62860-86.jpg" />
+        <a-asset-item id="avatarModel" src="./Tiger.glb"></a-asset-item>
+      </a-assets>
 
-      <!-- Cámara con cursor compatible móvil y escritorio -->
-      <a-camera position="0 0 0" look-controls="enabled: false">
-        <a-cursor fuse="false" rayOrigin="cursor"></a-cursor>
-      </a-camera>
-
-      <!-- Marcador y modelo inicial -->
-      <a-entity mindar-image-target="targetIndex: 0" id="marker">
-        <a-plane src="./cabeza-tigre-geometrica_62860-86.jpg" position="0 0 0" height="0.552" width="1"></a-plane>
-
-        <!-- Modelo 3D inicial -->
-        <a-gltf-model id="avatarModel" src="./Tiger.glb"
-                      position="0 0 1" scale="0.005 0.005 0.005" rotation="0.5 0.5 0.5"
-                      class="clickable">
-        </a-gltf-model>
+      <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+      <a-entity mindar-image-target="targetIndex: 0">
+        <a-plane src="#card" position="0 0 0" height="0.552" width="1" rotation="0 0 0"></a-plane>
+        <a-gltf-model rotation="0.5 0.5 0.5 " position="0 0 1" scale="0.005 0.005 0.005" src="#avatarModel" animation="property: position; to: 0 0.1 0.1; dur: 1000; easing: easeInOutQuad; loop: true; dir: alternate">
       </a-entity>
     </a-scene>
-
-    <script>
-      // Lista de rutas a los modelos
-      const modelos = ["./Tiger.glb", "./modelo1.glb", "./modelo2.glb", "./modelo3.glb"];
-      let indice = 0;
-
-      const avatar = document.getElementById("avatarModel");
-      const cursor = document.getElementById("cursor");
-
-      // Cambiar modelo al tocar el modelo
-      cursor.addEventListener("click", (evt) => {
-        const intersectedEl = evt.detail.intersectedEl;
-        if (intersectedEl && intersectedEl.id === "avatarModel") {
-          // Cambia al siguiente modelo
-          indice = (indice + 1) % modelos.length;
-          avatar.setAttribute("gltf-model", modelos[indice]);
-        }
-      });
-    </script>
-  </body>
+  </body>
 </html>
