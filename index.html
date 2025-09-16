@@ -1,4 +1,3 @@
-
 <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -10,38 +9,36 @@
       
       <a-assets>
         <!-- Imagen del marcador -->
-        <img id="card" src="./marcador.jpg" />
-        <!-- Modelos 3D: reemplaza estos archivos con los tuyos -->
-        <a-asset-item id="model1" src="./modelo1.glb"></a-asset-item>
-        <a-asset-item id="model2" src="./modelo2.glb"></a-asset-item>
-        <a-asset-item id="model3" src="./modelo3.glb"></a-asset-item>
+        <img id="card" src="./cabeza-tigre-geometrica_62860-86.jpg" />
+        <!-- Modelos 3D -->
+        <a-asset-item id="model1" src="./Tiger.glb"></a-asset-item>
+        <a-asset-item id="model2" src="./Tiger2.glb"></a-asset-item>
+        <a-asset-item id="model3" src="./Tiger3.glb"></a-asset-item>
       </a-assets>
 
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
-      <a-entity mindar-image-target="targetIndex: 0">
-        <!-- Plano del marcador -->
+      <!-- Contenedor del marcador -->
+      <a-entity mindar-image-target="targetIndex: 0" id="markerContainer">
         <a-plane src="#card" position="0 0 0" height="0.552" width="1" rotation="0 0 0"></a-plane>
-
-        <!-- Modelo 3D que se puede cambiar -->
-        <a-gltf-model id="avatarModel" rotation="0 0 0" position="0 0 0.5" scale="0.005 0.005 0.005"
-                      src="#model1" 
+        <!-- Modelo 3D inicial -->
+        <a-gltf-model id="avatarModel" src="#model1" position="0 0 1" scale="0.005 0.005 0.005" rotation="0.5 0.5 0.5"
                       animation="property: position; to: 0 0.1 0.1; dur: 1000; easing: easeInOutQuad; loop: true; dir: alternate">
         </a-gltf-model>
       </a-entity>
     </a-scene>
 
     <script>
-      // Lista de IDs de los modelos 3D
       const modelos = ["#model1", "#model2", "#model3"];
       let indice = 0;
 
+      const marker = document.getElementById("markerContainer");
       const avatar = document.getElementById("avatarModel");
 
-      // Cambia de modelo al hacer clic sobre el modelo
-      avatar.addEventListener("click", () => {
+      // Cambiar modelo al hacer clic sobre el contenedor del marcador
+      marker.addEventListener("click", () => {
         indice = (indice + 1) % modelos.length;
-        avatar.setAttribute("src", modelos[indice]);
+        avatar.setAttribute("gltf-model", modelos[indice]);
       });
     </script>
   </body>
