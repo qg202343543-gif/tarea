@@ -8,20 +8,21 @@
     <a-scene mindar-image="imageTargetSrc: ./targets.mind;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
       
       <a-assets>
-        <!-- Imagen del marcador -->
         <img id="card" src="./cabeza-tigre-geometrica_62860-86.jpg" />
-        <!-- Modelos 3D -->
         <a-asset-item id="model1" src="./Tiger.glb"></a-asset-item>
         <a-asset-item id="model2" src="./Tiger2.glb"></a-asset-item>
         <a-asset-item id="model3" src="./Tiger3.glb"></a-asset-item>
       </a-assets>
 
-      <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+      <!-- Cámara con cursor para detectar clicks/taps -->
+      <a-camera position="0 0 0" look-controls="enabled: false">
+        <a-cursor fuse="false" rayOrigin="mouse"></a-cursor>
+      </a-camera>
 
-      <!-- Contenedor del marcador -->
-      <a-entity mindar-image-target="targetIndex: 0" id="markerContainer">
+      <a-entity mindar-image-target="targetIndex: 0">
         <a-plane src="#card" position="0 0 0" height="0.552" width="1" rotation="0 0 0"></a-plane>
-        <!-- Modelo 3D inicial -->
+
+        <!-- Modelo 3D -->
         <a-gltf-model id="avatarModel" src="#model1" position="0 0 1" scale="0.005 0.005 0.005" rotation="0.5 0.5 0.5"
                       animation="property: position; to: 0 0.1 0.1; dur: 1000; easing: easeInOutQuad; loop: true; dir: alternate">
         </a-gltf-model>
@@ -32,11 +33,10 @@
       const modelos = ["#model1", "#model2", "#model3"];
       let indice = 0;
 
-      const marker = document.getElementById("markerContainer");
       const avatar = document.getElementById("avatarModel");
 
-      // Cambiar modelo al hacer clic sobre el contenedor del marcador
-      marker.addEventListener("click", () => {
+      // Escucha clicks/taps sobre el modelo usando A-Frame cursor
+      avatar.addEventListener("click", () => {
         indice = (indice + 1) % modelos.length;
         avatar.setAttribute("gltf-model", modelos[indice]);
       });
