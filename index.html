@@ -11,10 +11,7 @@
              vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
 
       <a-assets>
-        <!-- Imagen del marcador -->
         <img id="card" src="./cabeza-tigre-geometrica_62860-86.jpg" />
-
-        <!-- Modelos 3D -->
         <a-asset-item id="Tiger" src="./Tiger.glb"></a-asset-item>
         <a-asset-item id="modelo1" src="./modelo1.glb"></a-asset-item>
         <a-asset-item id="modelo2" src="./modelo2.glb"></a-asset-item>
@@ -26,36 +23,34 @@
         <a-cursor id="cursor" fuse="false" rayOrigin="cursor"></a-cursor>
       </a-camera>
 
-      <!-- Marcador y modelos pre-cargados -->
-      <a-entity mindar-image-target="targetIndex: 0" id="marker">
-        <!-- Imagen de referencia -->
-        <a-plane src="#card" position="0 0 0" height="0.552" width="1"></a-plane>
+      <!-- Marcador y modelo inicial -->
+      <a-entity mindar-image-target="targetIndex: 0">
+        <a-plane src="#card" position="0 0 0" height="0.552" width="1" rotation="0 0 0"></a-plane>
 
-        <!-- Modelos cargados desde el inicio -->
-        <a-gltf-model id="Tiger" src="#Tiger" position="0 0 1" scale="0.005 0.005 0.005" rotation="0.5 0.5 0.5" visible="true"></a-gltf-model>
-        <a-gltf-model id="modelo1" src="#modelo1" position="0 0 1" scale="0.005 0.005 0.005" rotation="0.5 0.5 0.5" visible="false"></a-gltf-model>
-        <a-gltf-model id="modelo2" src="#modelo2" position="0 0 1" scale="0.005 0.005 0.005" rotation="0.5 0.5 0.5" visible="false"></a-gltf-model>
-        <a-gltf-model id="modelo3" src="#modelo3" position="0 0 1" scale="0.005 0.005 0.005" rotation="0.5 0.5 0.5" visible="false"></a-gltf-model>
-
-        <!-- Plano invisible adelantado para recibir taps -->
-        <a-plane id="clickPlane" position="0 0 1.01" width="0.8" height="0.8"
-                 material="opacity:0; transparent:true"></a-plane>
+        <!-- Modelo 3D inicial -->
+        <a-gltf-model id="avatarModel" src="#Tiger"
+                      position="0 0 1" scale="0.005 0.005 0.005" rotation="0.5 0.5 0.5"
+                      animation="property: position; to: 0 0.1 0.1; dur: 1000; easing: easeInOutQuad; loop: true; dir: alternate"
+                      class="clickable">
+        </a-gltf-model>
       </a-entity>
     </a-scene>
 
     <script>
-      const modelos = ["Tiger", "modelo1", "modelo2", "modelo3"];
+      // Lista de modelos con sus IDs de assets
+      const modelos = ["#Tiger", "#modelo1", "#modelo2", "#modelo3"];
       let indice = 0;
 
-      const clickPlane = document.getElementById("clickPlane");
+      const avatar = document.getElementById("avatarModel");
+      const cursor = document.getElementById("cursor");
 
-      // Alternar modelos al tocar el plano invisible
-      clickPlane.addEventListener("click", () => {
-        // Ocultar modelo actual
-        document.getElementById(modelos[indice]).setAttribute("visible", "false");
-        // Siguiente modelo
-        indice = (indice + 1) % modelos.length;
-        document.getElementById(modelos[indice]).setAttribute("visible", "true");
+      // Cambiar modelo cuando se hace click/tap sobre el modelo
+      cursor.addEventListener("click", (evt) => {
+        const intersectedEl = evt.detail.intersectedEl;
+        if (intersectedEl && intersectedEl.id === "avatarModel") {
+          indice = (indice + 1) % modelos.length;
+          avatar.setAttribute("gltf-model", modelos[indice]);
+        }
       });
     </script>
   </body>
